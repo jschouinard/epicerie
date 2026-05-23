@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛒 Liste d'épicerie</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #e8f5e9;
+    color: #1b3a1e;
+    line-height: 1.45;
+    padding: 16px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 18px; }
+  h1 { color: #1b5e20; font-size: 1.7rem; }
+  .sub { color: #2e7d32; font-size: .9rem; margin-top: 6px; }
+  .sub strong { color: #1b5e20; }
+
+  .progress-box { background: #fff; border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .progress-label { font-size: .85rem; color: #2e7d32; margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .bar { background: #e8f5e9; border-radius: 8px; height: 16px; overflow: hidden; }
+  .bar-fill { background: linear-gradient(90deg,#2e7d32,#1b5e20); height: 100%; width: 0%; transition: width .3s; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .toolbar button {
+    flex: 1 1 auto; min-width: 120px; background: #2e7d32; color: #fff; border: none;
+    padding: 10px 12px; border-radius: 8px; font-size: .85rem; cursor: pointer; font-weight: 600;
+  }
+  .toolbar button:hover { background: #1b5e20; }
+
+  .section-title { color: #1b5e20; font-size: 1.05rem; margin: 22px 0 10px; font-weight: 700; }
+
+  .recipe-card { background: #fff; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07); display: flex; align-items: center; gap: 10px; }
+  .recipe-card.removed { opacity: .55; background: #f1f1f1; }
+  .recipe-info { flex: 1; min-width: 0; }
+  .recipe-name { font-weight: 600; font-size: .95rem; color: #1b3a1e; }
+  .recipe-card.removed .recipe-name { text-decoration: line-through; }
+  .recipe-meta { font-size: .78rem; color: #6b8e6e; margin-top: 2px; }
+  .recipe-meta a { color: #2e7d32; text-decoration: none; }
+  .recipe-meta a:hover { text-decoration: underline; }
+  .recipe-btn { border: none; border-radius: 7px; padding: 8px 10px; font-size: .78rem;
+    cursor: pointer; font-weight: 600; white-space: nowrap; }
+  .btn-remove { background: #ffe0e0; color: #b3261e; }
+  .btn-remove:hover { background: #ffc9c9; }
+  .btn-restore { background: #2e7d32; color: #fff; }
+  .btn-restore:hover { background: #1b5e20; }
+
+  .category { background: #fff; border-radius: 10px; margin-bottom: 10px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+  .cat-header { display: flex; align-items: center; gap: 8px; padding: 12px 14px; cursor: pointer;
+    background: #f1f8f2; user-select: none; }
+  .cat-header:hover { background: #e8f5e9; }
+  .cat-emoji { font-size: 1.15rem; }
+  .cat-name { font-weight: 700; color: #1b5e20; flex: 1; font-size: .98rem; }
+  .cat-count { background: #2e7d32; color: #fff; border-radius: 12px; font-size: .72rem;
+    padding: 2px 9px; font-weight: 600; }
+  .cat-chevron { color: #2e7d32; font-size: .8rem; transition: transform .2s; }
+  .category.collapsed .cat-chevron { transform: rotate(-90deg); }
+  .category.collapsed .cat-body { display: none; }
+  .category.empty .cat-header { opacity: .5; }
+  .category.empty .cat-count { background: #9e9e9e; }
+
+  .cat-body { padding: 4px 0 8px; }
+  .item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 14px; border-top: 1px solid #f0f0f0; }
+  .item:first-child { border-top: none; }
+  .item input[type=checkbox] { width: 20px; height: 20px; margin-top: 1px; accent-color: #2e7d32;
+    cursor: pointer; flex-shrink: 0; }
+  .item-text { flex: 1; min-width: 0; }
+  .item-name { font-size: .92rem; }
+  .item.checked .item-name { text-decoration: line-through; color: #9e9e9e; }
+  .item-qty { color: #2e7d32; font-weight: 600; font-size: .82rem; }
+  .item.checked .item-qty { color: #bdbdbd; }
+  .item-recipes { font-size: .76rem; color: #88a98b; font-style: italic; margin-top: 1px; }
+  .item-manual-tag { font-size: .72rem; color: #b9821a; font-style: italic; margin-top: 1px; }
+  .item-del { background: none; border: none; color: #c0392b; cursor: pointer; font-size: .9rem;
+    padding: 2px 6px; flex-shrink: 0; }
+
+  .add-row { display: flex; gap: 6px; padding: 10px 14px 4px; }
+  .add-row input { flex: 1; border: 1px solid #cfe3d0; border-radius: 7px; padding: 8px 10px;
+    font-size: .85rem; }
+  .add-row input:focus { outline: 2px solid #2e7d32; }
+  .add-row button { background: #2e7d32; color: #fff; border: none; border-radius: 7px;
+    padding: 8px 14px; cursor: pointer; font-weight: 600; font-size: .85rem; }
+  .add-row button:hover { background: #1b5e20; }
+
+  footer { text-align: center; color: #6b8e6e; font-size: .75rem; margin-top: 24px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🛒 Liste d'épicerie</h1>
+    <div class="sub" id="subtitle"></div>
+  </header>
+
+  <div class="progress-box">
+    <div class="progress-label"><span id="progressText">0 / 0 items cochés</span><span id="progressPct">0 %</span></div>
+    <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+  </div>
+
+  <div class="toolbar">
+    <button onclick="toggleAll()">↕ Tout replier/déplier</button>
+    <button onclick="uncheckAll()">☐ Tout décocher</button>
+    <button onclick="copyList()">📋 Copier la liste</button>
+  </div>
+
+  <div class="section-title">🍽️ Recettes de la semaine</div>
+  <div id="recipesContainer"></div>
+
+  <div class="section-title">📂 Liste par catégorie</div>
+  <div id="categoriesContainer"></div>
+
+  <footer>Généré automatiquement à partir du tableau Pinterest « Repas de la semaine » · semaine du 23 mai 2026</footer>
+</div>
+
+<script>
+/* ===================== DONNÉES ===================== */
+const recipes = [
+  {id:'r1', name:'Cari de chou-fleur au beurre', portions:'4 portions', source:'Dishing Out Health', url:'https://dishingouthealth.com/butter-cauliflower-recipe/', short:'Cari chou-fleur'},
+  {id:'r2', name:'Gnocchis façon pâté chinois', portions:'4 portions', source:'Moribyan', url:'https://moribyan.com/shepherds-pie-gnocchi/', short:'Gnocchis pâté chinois'},
+  {id:'r3', name:'Bol poulet & patate douce', portions:'4 portions', source:'Rednoice', url:'https://rednoice.com/high-protein-meals/', short:'Bol poulet patate douce'},
+  {id:'r4', name:"Tofu sésame épicé à l'ail", portions:'4 portions', source:'Minimalist Baker', url:'https://minimalistbaker.com/spicy-garlicky-sesame-tofu/', short:'Tofu sésame'},
+  {id:'r5', name:'Biscuits pois chiches & chocolat', portions:'12 biscuits', source:'Trois fois par jour', url:'https://www.troisfoisparjour.com/fr/recettes/desserts/biscuits-scones/biscuits-aux-pois-chiches-au-chocolat/', short:'Biscuits pois chiches'},
+  {id:'r6', name:'Soupe marocaine carottes & haricots blancs', portions:'4 portions', source:'Snixy Kitchen', url:'https://www.snixykitchen.com/moroccan-carrot-soup/', short:'Soupe carottes'},
+  {id:'r7', name:'Barres déjeuner framboises-chia', portions:'12 barres', source:'K pour Katrine', url:'https://www.kpourkatrine.com/fr/recettes/barres-dejeuner-framboises-chia/', short:'Barres framboises-chia'},
+  {id:'r8', name:'Polenta pesto, champignons & pois chiches', portions:'6 portions', source:'Half Baked Harvest', url:'https://www.halfbakedharvest.com/pesto-polenta-with-thyme-roasted-mushrooms-and-chickpeas/', short:'Polenta pesto'}
+];
+
+const categories = [
+  {emoji:'🥐', name:'Déjeuner & Lunch', fixed:true, items:[
+    {name:'Bananes', qty:''},
+    {name:'Fraises', qty:''},
+    {name:'Framboises', qty:''},
+    {name:'Mangues', qty:''},
+    {name:'Bleuets', qty:''},
+    {name:'Lait de soya 2 L', qty:''},
+    {name:'Pain tranché', qty:''},
+    {name:'Œufs', qty:''},
+    {name:'Yogourt', qty:''}
+  ]},
+  {emoji:'🐟', name:'Poissons & Viandes', items:[
+    {name:'Agneau haché (ou bœuf haché)', qty:'1 paquet ~500 g', recettes:['r2']},
+    {name:'Poitrines de poulet', qty:'1 paquet ~700 g', recettes:['r3']}
+  ]},
+  {emoji:'🥬', name:'Fruits & Légumes', items:[
+    {name:'Citron', qty:'2-3', recettes:['r1','r6']},
+    {name:'Chou-fleur', qty:'1', recettes:['r1']},
+    {name:'Oignon jaune', qty:'3', recettes:['r1','r2','r6']},
+    {name:'Ail', qty:'2 têtes', recettes:['r1','r2','r4','r6','r8']},
+    {name:'Gingembre frais', qty:'1 morceau', recettes:['r1']},
+    {name:'Coriandre fraîche', qty:'1 bouquet', recettes:['r1']},
+    {name:'Patates douces', qty:'2', recettes:['r3']},
+    {name:'Brocoli', qty:'2', recettes:['r3','r4']},
+    {name:'Petits pois & carottes surgelés', qty:'1 sac', recettes:['r2']},
+    {name:'Thym frais', qty:'1 paquet', recettes:['r2','r6','r8']},
+    {name:'Romarin frais', qty:'1 paquet', recettes:['r2']},
+    {name:'Persil frais', qty:'1 bouquet', recettes:['r2']},
+    {name:'Oignons verts', qty:'1 botte', recettes:['r4']},
+    {name:'Carottes', qty:'1 sac (~2 lb)', recettes:['r6']},
+    {name:'Framboises surgelées', qty:'1 sac', recettes:['r7']},
+    {name:'Framboises fraîches', qty:'1 casseau', recettes:['r7']},
+    {name:'Champignons', qty:'2 paquets', recettes:['r8']},
+    {name:'Chou frisé (kale) ou épinards', qty:'1 bouquet', recettes:['r8']}
+  ]},
+  {emoji:'🥛', name:'Produits laitiers & Réfrigéré', items:[
+    {name:'Beurre non salé', qty:'1 lb', recettes:['r1','r2','r8']},
+    {name:'Crème 35 %', qty:'1 contenant', recettes:['r1','r2']},
+    {name:'Yogourt grec', qty:'1 pot', recettes:['r1','r6']},
+    {name:'Parmesan', qty:'1 morceau', recettes:['r2']},
+    {name:'Tofu ferme', qty:'1 paquet', recettes:['r4']},
+    {name:'Ghee (beurre clarifié)', qty:'1 pot', recettes:['r6']},
+    {name:'Burrata', qty:'1', recettes:['r8']}
+  ]},
+  {emoji:'🫘', name:'Conserves & Légumineuses', items:[
+    {name:'Pâte de tomate', qty:'1 boîte', recettes:['r1','r2']},
+    {name:'Sauce tomate', qty:'1 boîte (8 oz)', recettes:['r1']},
+    {name:'Pois chiches', qty:'2 boîtes', recettes:['r5','r8']},
+    {name:'Haricots blancs (cannellini)', qty:'1 boîte', recettes:['r6']}
+  ]},
+  {emoji:'🌾', name:'Céréales, Farines & Pâtes', items:[
+    {name:'Fécule de maïs', qty:'1 contenant', recettes:['r1','r2','r4']},
+    {name:'Riz basmati', qty:'1 sac', recettes:['r1']},
+    {name:'Gnocchis', qty:'1 paquet', recettes:['r2']},
+    {name:'Riz (brun ou blanc)', qty:'1 sac', recettes:['r3','r4']},
+    {name:'Farine tout usage', qty:'1 sac', recettes:['r5']},
+    {name:'Poudre à pâte', qty:'1 contenant', recettes:['r5']},
+    {name:'Flocons de quinoa', qty:'1 paquet', recettes:['r7']},
+    {name:"Flocons d'avoine à cuisson rapide", qty:'1 sac', recettes:['r7']},
+    {name:"Farine d'amandes", qty:'1 sac', recettes:['r7']},
+    {name:'Farine sans gluten', qty:'1 sac', recettes:['r7']},
+    {name:'Polenta', qty:'1 paquet', recettes:['r8']}
+  ]},
+  {emoji:'🍫', name:'Chocolat & Sucré', items:[
+    {name:'Miel', qty:'1 contenant', recettes:['r3']},
+    {name:"Sirop d'érable", qty:'1 bouteille', recettes:['r4','r6','r7']},
+    {name:'Cassonade', qty:'1 sac', recettes:['r5']},
+    {name:'Extrait de vanille', qty:'1 bouteille', recettes:['r5','r7']},
+    {name:'Chocolat noir', qty:'100 g', recettes:['r5']},
+    {name:"Extrait d'amande", qty:'1 petite bouteille', recettes:['r7']}
+  ]},
+  {emoji:'🫒', name:'Huiles, Sauces & Condiments', items:[
+    {name:"Huile d'olive", qty:'1 bouteille', recettes:['r1','r2','r3','r4','r6','r8']},
+    {name:'Bouillon de légumes', qty:'1 carton', recettes:['r1','r6']},
+    {name:'Sauce Worcestershire', qty:'1 bouteille', recettes:['r2']},
+    {name:'Bouillon de bœuf', qty:'1 carton', recettes:['r2']},
+    {name:"Tahini ou beurre d'arachide", qty:'1 pot', recettes:['r3']},
+    {name:'Sauce soya (ou tamari)', qty:'1 bouteille', recettes:['r3','r4']},
+    {name:'Vinaigre de riz', qty:'1 bouteille', recettes:['r3','r4']},
+    {name:'Huile de sésame', qty:'1 bouteille', recettes:['r3','r4']},
+    {name:'Huile de coco', qty:'1 pot', recettes:['r7']},
+    {name:'Pesto au basilic', qty:'1 pot', recettes:['r8']}
+  ]},
+  {emoji:'🧂', name:'Épices & Assaisonnements', items:[
+    {name:'Cumin moulu', qty:'', recettes:['r1','r3']},
+    {name:'Curcuma moulu', qty:'', recettes:['r1']},
+    {name:'Garam masala', qty:'', recettes:['r1']},
+    {name:'Sel', qty:'', recettes:['r1','r2','r3','r4','r6','r7','r8']},
+    {name:'Paprika', qty:'', recettes:['r1','r3']},
+    {name:'Cannelle moulue', qty:'', recettes:['r1','r6','r7']},
+    {name:'Poivre de Cayenne', qty:'', recettes:['r1']},
+    {name:'Paprika fumé', qty:'', recettes:['r2']},
+    {name:'Poivre noir', qty:'', recettes:['r2','r3','r8']},
+    {name:'Flocons de piment', qty:'', recettes:['r2','r4','r8']},
+    {name:"Poudre d'ail", qty:'', recettes:['r3']},
+    {name:"Poudre d'oignon", qty:'', recettes:['r3']},
+    {name:'Sumac moulu', qty:'', recettes:['r6']},
+    {name:'Thym séché', qty:'', recettes:['r6']}
+  ]},
+  {emoji:'🥥', name:'Noix & Garnitures', items:[
+    {name:'Graines de sésame', qty:'1 sac', recettes:['r4','r6']},
+    {name:'Graines de chia', qty:'1 sac', recettes:['r7']},
+    {name:'Amandes tranchées', qty:'1 sac', recettes:['r7']},
+    {name:'Noisettes', qty:'1 sac', recettes:['r6']}
+  ]},
+  {emoji:'🍿', name:'Collation', fixed:true, items:[]}
+];
+
+/* ===================== ÉTAT (mémoire JS) ===================== */
+const removedRecipes = {};   // recipeId -> true
+const checkedState = {};     // itemId -> true
+const manualItems = {};      // categoryIndex -> [{id,name,checked}]
+let manualCounter = 0;
+
+function slug(s){
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+/* IDs stables basés sur catégorie + nom */
+categories.forEach((cat,ci)=>{
+  manualItems[ci] = [];
+  cat.items.forEach(it=>{
+    it.id = 'i-'+slug(cat.name)+'__'+slug(it.name);
+    if(!it.recettes) it.recettes = [];
+  });
+});
+
+/* ===================== LOGIQUE ===================== */
+function activeRecettes(it){ return it.recettes.filter(r=>!removedRecipes[r]); }
+function itemVisible(cat,it){
+  if(cat.fixed) return true;
+  if(it.recettes.length===0) return true;
+  return activeRecettes(it).length>0;
+}
+function recipeById(id){ return recipes.find(r=>r.id===id); }
+
+/* ===================== RENDU ===================== */
+function renderSubtitle(){
+  const active = recipes.filter(r=>!removedRecipes[r.id]).length;
+  let items=0;
+  categories.forEach((cat,ci)=>{
+    cat.items.forEach(it=>{ if(itemVisible(cat,it)) items++; });
+    items += manualItems[ci].length;
+  });
+  document.getElementById('subtitle').innerHTML =
+    '<strong>'+active+'</strong> recette'+(active>1?'s':'')+' active'+(active>1?'s':'')+
+    ' · <strong>'+items+'</strong> items<br>Quantités ajustées : minimum 4 portions par recette';
+}
+
+function renderRecipes(){
+  const c = document.getElementById('recipesContainer');
+  c.innerHTML='';
+  recipes.forEach(r=>{
+    const removed = !!removedRecipes[r.id];
+    const card = document.createElement('div');
+    card.className = 'recipe-card'+(removed?' removed':'');
+    card.innerHTML =
+      '<div class="recipe-info">'+
+        '<div class="recipe-name">'+r.name+'</div>'+
+        '<div class="recipe-meta">'+r.portions+' · <a href="'+r.url+'" target="_blank" rel="noopener">'+r.source+' ↗</a></div>'+
+      '</div>'+
+      (removed
+        ? '<button class="recipe-btn btn-restore" onclick="restoreRecipe(\''+r.id+'\')">↺ Restaurer</button>'
+        : '<button class="recipe-btn btn-remove" onclick="removeRecipe(\''+r.id+'\')">✕ Retirer</button>');
+    c.appendChild(card);
+  });
+}
+
+function renderCategories(){
+  const c = document.getElementById('categoriesContainer');
+  c.innerHTML='';
+  categories.forEach((cat,ci)=>{
+    const visItems = cat.items.filter(it=>itemVisible(cat,it));
+    const count = visItems.length + manualItems[ci].length;
+    const div = document.createElement('div');
+    div.className = 'category'+(cat.collapsed?' collapsed':'')+(count===0?' empty':'');
+
+    let body = '<div class="cat-body">';
+    visItems.forEach(it=>{ body += renderItem(it); });
+    manualItems[ci].forEach(mi=>{ body += renderManualItem(ci,mi); });
+    body += '<div class="add-row">'+
+      '<input type="text" id="addInput-'+ci+'" placeholder="+ Ajouter un item…" '+
+      'onkeydown="if(event.key===\'Enter\')addManual('+ci+')">'+
+      '<button onclick="addManual('+ci+')">Ajouter</button>'+
+    '</div></div>';
+
+    div.innerHTML =
+      '<div class="cat-header" onclick="toggleCat('+ci+')">'+
+        '<span class="cat-emoji">'+cat.emoji+'</span>'+
+        '<span class="cat-name">'+cat.name+'</span>'+
+        '<span class="cat-count">'+count+'</span>'+
+        '<span class="cat-chevron">▼</span>'+
+      '</div>'+ body;
+    c.appendChild(div);
+  });
+}
+
+function renderItem(it){
+  const checked = !!checkedState[it.id];
+  const act = activeRecettes(it).map(rid=>recipeById(rid).short);
+  let sub='';
+  if(act.length) sub = '<div class="item-recipes">'+act.join(' · ')+'</div>';
+  const qty = it.qty ? '<span class="item-qty">'+it.qty+'</span> ' : '';
+  return '<div class="item'+(checked?' checked':'')+'">'+
+    '<input type="checkbox" '+(checked?'checked':'')+' onchange="toggleItem(\''+it.id+'\')">'+
+    '<div class="item-text"><div class="item-name">'+qty+it.name+'</div>'+sub+'</div>'+
+  '</div>';
+}
+
+function renderManualItem(ci,mi){
+  const checked = !!mi.checked;
+  return '<div class="item'+(checked?' checked':'')+'">'+
+    '<input type="checkbox" '+(checked?'checked':'')+' onchange="toggleManual('+ci+',\''+mi.id+'\')">'+
+    '<div class="item-text"><div class="item-name">'+escapeHtml(mi.name)+'</div>'+
+      '<div class="item-manual-tag">✏️ Ajouté manuellement</div></div>'+
+    '<button class="item-del" onclick="deleteManual('+ci+',\''+mi.id+'\')" title="Supprimer">✕</button>'+
+  '</div>';
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderProgress(){
+  let total=0, done=0;
+  categories.forEach((cat,ci)=>{
+    cat.items.forEach(it=>{
+      if(itemVisible(cat,it)){ total++; if(checkedState[it.id]) done++; }
+    });
+    manualItems[ci].forEach(mi=>{ total++; if(mi.checked) done++; });
+  });
+  const pct = total? Math.round(done/total*100) : 0;
+  document.getElementById('progressText').textContent = done+' / '+total+' items cochés';
+  document.getElementById('progressPct').textContent = pct+' %';
+  document.getElementById('barFill').style.width = pct+'%';
+}
+
+function renderAll(){ renderSubtitle(); renderRecipes(); renderCategories(); renderProgress(); }
+
+/* ===================== ACTIONS ===================== */
+function toggleItem(id){
+  checkedState[id] = !checkedState[id];
+  renderCategories(); renderProgress();
+}
+function toggleManual(ci,id){
+  const mi = manualItems[ci].find(m=>m.id===id);
+  if(mi){ mi.checked=!mi.checked; renderCategories(); renderProgress(); }
+}
+function deleteManual(ci,id){
+  manualItems[ci] = manualItems[ci].filter(m=>m.id!==id);
+  renderAll();
+}
+function addManual(ci){
+  const inp = document.getElementById('addInput-'+ci);
+  if(!inp) return;
+  const val = inp.value.trim();
+  if(!val) return;
+  manualItems[ci].push({id:'m'+(++manualCounter), name:val, checked:false});
+  if(categories[ci].collapsed) categories[ci].collapsed=false;
+  renderAll();
+  const newInp = document.getElementById('addInput-'+ci);
+  if(newInp) newInp.focus();
+}
+function toggleCat(ci){
+  categories[ci].collapsed = !categories[ci].collapsed;
+  renderCategories();
+}
+let allCollapsed=false;
+function toggleAll(){
+  allCollapsed = !allCollapsed;
+  categories.forEach(c=>c.collapsed=allCollapsed);
+  renderCategories();
+}
+function uncheckAll(){
+  for(const k in checkedState) delete checkedState[k];
+  categories.forEach((cat,ci)=>manualItems[ci].forEach(mi=>mi.checked=false));
+  renderCategories(); renderProgress();
+}
+function removeRecipe(id){
+  const r = recipeById(id);
+  if(!confirm('Retirer « '+r.name+' » ?\n\nLes ingrédients utilisés uniquement par cette recette seront retirés de la liste. Les ingrédients partagés resteront, sans l\'étiquette de cette recette.'))
+    return;
+  removedRecipes[id]=true;
+  renderAll();
+}
+function restoreRecipe(id){
+  delete removedRecipes[id];
+  renderAll();
+}
+function copyList(){
+  let txt='🛒 LISTE D\'ÉPICERIE\n';
+  categories.forEach((cat,ci)=>{
+    const vis = cat.items.filter(it=>itemVisible(cat,it));
+    if(vis.length===0 && manualItems[ci].length===0) return;
+    txt += '\n'+cat.emoji+' '+cat.name.toUpperCase()+'\n';
+    vis.forEach(it=>{
+      const box = checkedState[it.id]?'[x]':'[ ]';
+      txt += box+' '+(it.qty?it.qty+' — ':'')+it.name+'\n';
+    });
+    manualItems[ci].forEach(mi=>{
+      txt += (mi.checked?'[x]':'[ ]')+' '+mi.name+' (ajouté)\n';
+    });
+  });
+  const ta = document.createElement('textarea');
+  ta.value = txt;
+  ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  let ok=false;
+  try { ok = document.execCommand('copy'); } catch(e){}
+  document.body.removeChild(ta);
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){},function(){});
+  }
+  alert(ok ? 'Liste copiée dans le presse-papiers ✓' : 'Liste prête — copiez le texte affiché.');
+}
+
+renderAll();
+</script>
+</body>
+</html>
