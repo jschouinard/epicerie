@@ -20,6 +20,10 @@ règles ci-dessous, écrire `data/<date>.json` au format `{ dateLabel, recipes, 
 # 3. Génère la page
 node epicerie.js build <date>      # → build/index.html + build/<date>.html
 open build/index.html              # vérification visuelle
+
+# 4. Publie sur GitHub Pages (SANS archives)
+node epicerie.js publish <date>    # copie vers la racine, commit, push origin main
+#   (option --no-push pour committer en local sans pousser)
 ```
 
 ## Règles métier (étape 2)
@@ -64,7 +68,12 @@ Les quantités s'additionnent logiquement (« 1 bouteille » reste « 1 bouteill
 - Pinterest : extraction batch (React Fiber), jamais pin par pin.
 - Retrait de recette = option A : items partagés restent, étiquette de la recette retirée disparaît.
 
-## Phase 4 (non incluse cette session)
-Mettre à jour `archives.html` (nouvelle semaine en haut), copier `build/` vers la racine,
-`git add index.html archives.html <date>.html && git commit && git push origin main`.
-⚠️ Configurer d'abord l'identité git (`git config user.name` / `user.email`).
+## Publication (Phase 4 — implémentée, SANS archives)
+`node epicerie.js publish <date>` copie `build/index.html` + `build/<date>.html` vers la
+racine (servie par GitHub Pages), commit « Épicerie semaine du <dateLabel> » et push `origin main`.
+Ne touche PAS à `archives.html`.
+
+Notes :
+- Identité git locale déjà configurée sur ce repo (`jschouinard` / `jeansebastien.chouinard@gmail.com`).
+- GitHub Pages redéploie automatiquement après le push (~1 min).
+- `archives.html` reste en ligne et le lien de bas de page fonctionne, mais n'est plus mis à jour.
