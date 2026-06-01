@@ -1,0 +1,15 @@
+{
+  "name": "epicerie",
+  "version": "1.0.0",
+  "description": "Génère une liste d'épicerie hebdomadaire à partir du board Pinterest « Repas de la semaine » et la publie sur GitHub Pages.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "node epicerie.js",
+    "test:generator": "node lib/generateHtml.test.js",
+    "scrape": "node lib/scrapePinterest.js"
+  },
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}

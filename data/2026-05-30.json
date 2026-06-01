@@ -1,0 +1,530 @@
+{
+  "date": "2026-05-30",
+  "dateLabel": "30 mai 2026",
+  "recipes": [
+    {
+      "id": "r1",
+      "name": "General Tso's Tofu",
+      "portions": "4 portions",
+      "source": "Vegan Richa",
+      "url": "https://www.veganricha.com/general-tsos-tofu/",
+      "short": "Tofu General Tso's"
+    },
+    {
+      "id": "r2",
+      "name": "Tuna Avocado Crispy Rice Salad",
+      "portions": "4 portions",
+      "source": "Simple Home Edit",
+      "url": "https://simplehomeedit.com/recipe/tuna-avocado-crispy-rice-salad/",
+      "short": "Riz croustillant thon"
+    },
+    {
+      "id": "r3",
+      "name": "Baked Gnocchi Blue Zone (artichaut, pois chiches, fenouil)",
+      "portions": "4-6 portions",
+      "source": "Food by Maria",
+      "url": "https://www.foodbymaria.com/baked-gnocchi/",
+      "short": "Gnocchi Blue Zone"
+    },
+    {
+      "id": "r4",
+      "name": "Casserole de poulet aux abricots et au citron",
+      "portions": "4-6 portions",
+      "source": "K pour Katrine",
+      "url": "https://www.kpourkatrine.com/fr/recettes/casserole-de-poulet-abricots-citron/",
+      "short": "Casserole poulet abricots"
+    },
+    {
+      "id": "r5",
+      "name": "Biscuits aux pois chiches & au chocolat",
+      "portions": "12 biscuits (exception pâtisserie)",
+      "source": "Trois fois par jour",
+      "url": "https://www.troisfoisparjour.com/fr/recettes/desserts/biscuits-scones/biscuits-aux-pois-chiches-au-chocolat/",
+      "short": "Biscuits pois chiches"
+    }
+  ],
+  "categories": [
+    {
+      "emoji": "🥐",
+      "name": "Déjeuner & Lunch",
+      "fixed": true,
+      "items": [
+        {
+          "name": "Bananes",
+          "qty": ""
+        },
+        {
+          "name": "Fraises",
+          "qty": ""
+        },
+        {
+          "name": "Framboises",
+          "qty": ""
+        },
+        {
+          "name": "Mangues",
+          "qty": ""
+        },
+        {
+          "name": "Bleuets",
+          "qty": ""
+        },
+        {
+          "name": "Lait de soya 2 L",
+          "qty": ""
+        },
+        {
+          "name": "Pain tranché",
+          "qty": ""
+        },
+        {
+          "name": "Œufs",
+          "qty": ""
+        },
+        {
+          "name": "Yogourt",
+          "qty": ""
+        }
+      ]
+    },
+    {
+      "emoji": "🐟",
+      "name": "Poissons & Viandes",
+      "items": [
+        {
+          "name": "Thon en conserve à l'huile",
+          "qty": "1 boîte 425 g",
+          "recettes": [
+            "r2"
+          ]
+        },
+        {
+          "name": "Hauts de cuisse de poulet désossés sans peau",
+          "qty": "1 paquet (~12 morceaux)",
+          "recettes": [
+            "r4"
+          ]
+        }
+      ]
+    },
+    {
+      "emoji": "🥬",
+      "name": "Fruits & Légumes",
+      "items": [
+        {
+          "name": "Ail",
+          "qty": "1 tête",
+          "recettes": [
+            "r1",
+            "r3",
+            "r4"
+          ]
+        },
+        {
+          "name": "Gingembre frais",
+          "qty": "1 morceau",
+          "recettes": [
+            "r1"
+          ]
+        },
+        {
+          "name": "Poivrons (1 rouge + 1 vert)",
+          "qty": "2",
+          "recettes": [
+            "r1"
+          ]
+        },
+        {
+          "name": "Oignons rouges",
+          "qty": "2",
+          "recettes": [
+            "r1",
+            "r4"
+          ]
+        },
+        {
+          "name": "Oignons verts",
+          "qty": "1 bouquet",
+          "recettes": [
+            "r1",
+            "r2"
+          ]
+        },
+        {
+          "name": "Concombres libanais",
+          "qty": "2",
+          "recettes": [
+            "r2"
+          ]
+        },
+        {
+          "name": "Avocat",
+          "qty": "1",
+          "recettes": [
+            "r2"
+          ]
+        },
+        {
+          "name": "Jalapeño frais (optionnel)",
+          "qty": "1",
+          "recettes": [
+            "r2"
+          ]
+        },
+        {
+          "name": "Courgettes",
+          "qty": "2",
+          "recettes": [
+            "r3"
+          ]
+        },
+        {
+          "name": "Fenouil",
+          "qty": "1 bulbe",
+          "recettes": [
+            "r3"
+          ]
+        },
+        {
+          "name": "Roquette",
+          "qty": "1 sac",
+          "recettes": [
+            "r3"
+          ]
+        },
+        {
+          "name": "Échalotes françaises",
+          "qty": "4",
+          "recettes": [
+            "r3"
+          ]
+        },
+        {
+          "name": "Orange",
+          "qty": "1",
+          "recettes": [
+            "r3"
+          ]
+        },
+        {
+          "name": "Citron",
+          "qty": "1",
+          "recettes": [
+            "r4"
+          ]
+        }
+      ]
+    },
+    {
+      "emoji": "🥛",
+      "name": "Produits laitiers & Réfrigéré",
+      "items": [
+        {
+          "name": "Tofu ferme ou extra-ferme",
+          "qty": "1 paquet 400 g",
+          "recettes": [
+            "r1"
+          ]
+        },
+        {
+          "name": "Mayonnaise aux œufs entiers",
+          "qty": "1 pot",
+          "recettes": [
+            "r2"
+          ]
+        },
+        {
+          "name": "Edamame congelé",
+          "qty": "1 sac",
+          "recettes": [
+            "r2"
+          ]
+        },
+        {
+          "name": "Fromage de chèvre",
+          "qty": "1 bûchette 100 g",
+          "recettes": [
+            "r3"
+          ]
+        }
+      ]
+    },
+    {
+      "emoji": "🫘",
+      "name": "Conserves & Légumineuses",
+      "items": [
+        {
+          "name": "Pois chiches en conserve",
+          "qty": "2 boîtes 540 ml",
+          "recettes": [
+            "r3",
+            "r5"
+          ]
+        },
+        {
+          "name": "Cœurs d'artichaut en conserve",
+          "qty": "1 boîte 400 ml",
+          "recettes": [
+            "r3"
+          ]
+        },
+        {
+          "name": "Abricots séchés",
+          "qty": "1 sachet",
+          "recettes": [
+            "r4"
+          ]
+        },
+        {
+          "name": "Bouillon de poulet",
+          "qty": "1 carton",
+          "recettes": [
+            "r4"
+          ]
+        },
+        {
+          "name": "Confiture d'abricots",
+          "qty": "1 pot",
+          "recettes": [
+            "r4"
+          ]
+        }
+      ]
+    },
+    {
+      "emoji": "🌾",
+      "name": "Céréales, Farines & Pâtes",
+      "items": [
+        {
+          "name": "Riz jasmin (ou paquet micro-ondes)",
+          "qty": "1 sac / 1 paquet",
+          "recettes": [
+            "r2"
+          ]
+        },
+        {
+          "name": "Gnocchis aux pommes de terre",
+          "qty": "1 paquet 500 g",
+          "recettes": [
+            "r3"
+          ]
+        },
+        {
+          "name": "Fécule de maïs",
+          "qty": "1 contenant",
+          "recettes": [
+            "r1"
+          ]
+        },
+        {
+          "name": "Farine tout usage",
+          "qty": "1 sac",
+          "recettes": [
+            "r5"
+          ]
+        }
+      ]
+    },
+    {
+      "emoji": "🍫",
+      "name": "Chocolat & Sucré",
+      "items": [
+        {
+          "name": "Chocolat noir",
+          "qty": "1 tablette 100 g",
+          "recettes": [
+            "r5"
+          ]
+        },
+        {
+          "name": "Cassonade",
+          "qty": "1 sac",
+          "recettes": [
+            "r1",
+            "r5"
+          ]
+        },
+        {
+          "name": "Miel",
+          "qty": "1 pot",
+          "recettes": [
+            "r2"
+          ]
+        }
+      ]
+    },
+    {
+      "emoji": "🫒",
+      "name": "Huiles, Sauces & Condiments",
+      "items": [
+        {
+          "name": "Sauce soya ou tamari",
+          "qty": "1 bouteille",
+          "recettes": [
+            "r1",
+            "r2"
+          ]
+        },
+        {
+          "name": "Huile de sésame grillé",
+          "qty": "1 bouteille",
+          "recettes": [
+            "r1",
+            "r2"
+          ]
+        },
+        {
+          "name": "Huile d'olive",
+          "qty": "1 bouteille",
+          "recettes": [
+            "r2",
+            "r3"
+          ]
+        },
+        {
+          "name": "Vinaigre de riz",
+          "qty": "1 bouteille",
+          "recettes": [
+            "r1",
+            "r2"
+          ]
+        },
+        {
+          "name": "Mirin",
+          "qty": "1 bouteille",
+          "recettes": [
+            "r1"
+          ]
+        },
+        {
+          "name": "Sambal oelek",
+          "qty": "1 pot",
+          "recettes": [
+            "r1"
+          ]
+        },
+        {
+          "name": "Moutarde à l'ancienne",
+          "qty": "1 pot",
+          "recettes": [
+            "r4"
+          ]
+        },
+        {
+          "name": "Vinaigre de vin rouge",
+          "qty": "1 bouteille",
+          "recettes": [
+            "r3"
+          ]
+        },
+        {
+          "name": "Olives vertes (hachées)",
+          "qty": "1 pot",
+          "recettes": [
+            "r3"
+          ]
+        },
+        {
+          "name": "Huile végétale",
+          "qty": "1 bouteille",
+          "recettes": [
+            "r1"
+          ]
+        }
+      ]
+    },
+    {
+      "emoji": "🧂",
+      "name": "Épices & Assaisonnements",
+      "items": [
+        {
+          "name": "Graines de sésame",
+          "qty": "1 sac",
+          "recettes": [
+            "r1",
+            "r2"
+          ]
+        },
+        {
+          "name": "Flocons de piment rouge",
+          "qty": "1 contenant",
+          "recettes": [
+            "r1"
+          ]
+        },
+        {
+          "name": "Poivre blanc moulu",
+          "qty": "1 contenant",
+          "recettes": [
+            "r1"
+          ]
+        },
+        {
+          "name": "Origan séché",
+          "qty": "1 contenant",
+          "recettes": [
+            "r3"
+          ]
+        },
+        {
+          "name": "Curcuma moulu",
+          "qty": "1 contenant",
+          "recettes": [
+            "r4"
+          ]
+        },
+        {
+          "name": "Gingembre moulu",
+          "qty": "1 contenant",
+          "recettes": [
+            "r4"
+          ]
+        },
+        {
+          "name": "Coriandre moulue",
+          "qty": "1 contenant",
+          "recettes": [
+            "r4"
+          ]
+        },
+        {
+          "name": "Cannelle moulue",
+          "qty": "1 contenant",
+          "recettes": [
+            "r4"
+          ]
+        },
+        {
+          "name": "Poudre à pâte",
+          "qty": "1 contenant",
+          "recettes": [
+            "r5"
+          ]
+        },
+        {
+          "name": "Extrait de vanille",
+          "qty": "1 bouteille",
+          "recettes": [
+            "r5"
+          ]
+        }
+      ]
+    },
+    {
+      "emoji": "🥤",
+      "name": "Boissons & Protéines",
+      "items": []
+    },
+    {
+      "emoji": "🥥",
+      "name": "Noix & Garnitures",
+      "items": []
+    },
+    {
+      "emoji": "🍿",
+      "name": "Collation",
+      "fixed": true,
+      "items": []
+    }
+  ]
+}

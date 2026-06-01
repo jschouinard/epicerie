@@ -1,0 +1,7 @@
+node_modules/
+build/
+data/raw-*.json
+.DS_Store
+
+# Doublon scratch de l'ère Cowork (la page canonique est index.html)
+index_upload.html
